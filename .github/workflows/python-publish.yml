@@ -1,0 +1,40 @@
+# This workflow will upload a Python Package using Twine when a release is created
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python#publishing-to-package-registries
+
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+name: Upload Python Package
+
+on:
+  pull_request:
+    branches: 
+      - main
+    types: [closed]
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python
+      uses: actions/setup-python@v3
+      with:
+        python-version: '3.x'
+    - name: Upgrade build
+      run: python3 -m pip install --upgrade build
+    - name: Build package
+      run: python -m build
+    - uses: shallwefootball/s3-upload-action@master
+      with:
+        aws_key_id: ${{ secrets.AWS_ACCESS_KEY }}
+        aws_secret_access_key: ${{ secrets.AWS_SECRET_KEY }}
+        aws_bucket: github-actions-workflow-test
+        source_dir: 'dist'
