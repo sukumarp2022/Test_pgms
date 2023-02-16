@@ -39,4 +39,4 @@ jobs:
         aws_secret_access_key: ${{ secrets.AWS_SECRET_KEY }}
         aws_bucket: github-actions-workflow-test
         source_dir: 'dist'
-        destination_dir: '/'
+        destination_dir: ''
